@@ -2,15 +2,6 @@ services:
   - type: web
     name: promocje
     env: python
+    runtime: python3
     buildCommand: pip install -r requirements.txt
     startCommand: python app.py
-    runtime: python3
-    envVars:
-      PYTHONUNBUFFERED: "1"
-    preDeploy:
-      - apt-get update && apt-get install -y wget gnupg
-      - wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-      - apt-get install -y ./google-chrome-stable_current_amd64.deb
-      - rm google-chrome-stable_current_amd64.deb
-        - pip install playwright
-  - playwright install
