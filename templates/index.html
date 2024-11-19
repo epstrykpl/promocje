@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generator HTML dla produktów Epstryk</title>
+</head>
+<body>
+
+<h1 style="text-align: center;">Generator HTML dla produktów Epstryk</h1>
+
+<!-- Sekcja formularza do wprowadzania kodów produktów -->
+<div style="text-align: center; margin-top: 20px;">
+    <form method="POST">
+        {% for i in range(1, 13) %}
+        <input type="text" name="product_code{{ i }}" placeholder="Kod produktu {{ i }}" style="margin: 5px;">
+        {% endfor %}
+        <button type="submit" style="padding: 10px 20px; background-color: #007bff; color: white; border: none; cursor: pointer; border-radius: 5px;">Generuj HTML</button>
+    </form>
+</div>
+
+{% if product_data %}
+<!-- Wyświetlenie wyników po wysłaniu formularza -->
+<div style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: flex-start; max-width: 1200px; margin: auto;">
+    {% for product in product_data %}
+    <div class="product-container-promo" style="flex: 1 1 calc(25% - 20px); border: none; padding: 15px; min-width: 250px; text-align: left; box-sizing: border-box; {% if not loop.first and (loop.index % 4 != 1) %}border-left: 1px solid #E1E2E8;{% endif %}">
+        <div class="image-container-promo" style="width: 100%; padding-top: 100%; position: relative; overflow: hidden; background-color: white;">
+            <a href="{{ product.link }}" style="position: absolute; top: 0; right: 0; bottom: 0; left: 0; display: flex; align-items: center; justify-content: center;">
+                <img src="{{ product.image_url }}" alt="{{ product.name }}" style="max-width: 100%; max-height: 100%; object-fit: contain;">
+            </a>
+        </div>
+        <div class="name-container-promo">
+            <a href="{{ product.link }}" style="display: block; text-transform: uppercase; font-weight: 700; text-decoration: none; font-size: 0.875rem; line-height: 1.4; color: black; margin-top: 10px;">{{ product.name }}</a>
+        </div>
+        <div class="price-container-promo" style="display: flex; align-items: center; margin-top: 5px;">
+            <span style="color: #E30815 !important; font-weight: 700; font-size: 130%;">{{ product.your_price }}</span>
+            <span style="text-decoration: line-through; color: #888; font-size: 75%; font-weight: 400; margin-left: 10px;">{{ product.catalog_price }}</span>
+        </div>
+        <div class="button-container-promo" style="display: flex; justify-content: flex-start; margin-top: 15px;">
+            <a href="https://epstryk.pl/pl/order/basket.html?add_product[{{ product.id }}]=1" class="btn btn--primary newsList__button">KUP TERAZ</a>
+        </div>
+    </div>
+    {% endfor %}
+
+    <!-- Dodanie pustych kontenerów dla wyrównania -->
+    {% for _ in range(4 - (product_data|length % 4)) %}
+    <div class="product-container-promo" style="flex: 1 1 calc(25% - 20px); border: none; padding: 15px; min-width: 250px; box-sizing: border-box; visibility: hidden;"></div>
+    {% endfor %}
+</div>
+
+<!-- Sekcja Kopiuj HTML -->
+<div style="text-align: center; margin-top: 20px;">
+    <textarea id="htmlOutput" style="width: 90%; height: 300px; padding: 10px; border: 1px solid #ddd; background-color: #f9f9f9; white-space: pre-wrap;">
+    &lt;div style=&quot;display: flex; flex-wrap: wrap; gap: 20px; justify-content: flex-start; max-width: 1200px; margin: auto;&quot;&gt;
+    
+    {% for product in product_data %}
+    &lt;div class=&quot;product-container-promo&quot; style=&quot;flex: 1 1 calc(25% - 20px); border: none; padding: 15px; min-width: 250px; text-align: left; box-sizing: border-box; {% if not loop.first and (loop.index % 4 != 1) %}border-left: 1px solid #E1E2E8;{% endif %}&quot;&gt;
+        &lt;div class=&quot;image-container-promo&quot; style=&quot;width: 100%; padding-top: 100%; position: relative; overflow: hidden; background-color: white;&quot;&gt;
+            &lt;a href=&quot;{{ product.link }}&quot; style=&quot;position: absolute; top: 0; right: 0; bottom: 0; left: 0; display: flex; align-items: center; justify-content: center;&quot;&gt;
+                &lt;img src=&quot;{{ product.image_url }}&quot; alt=&quot;{{ product.name }}&quot; style=&quot;max-width: 100%; max-height: 100%; object-fit: contain;&quot;&gt;
+            &lt;/a&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;name-container-promo&quot;&gt;
+            &lt;a href=&quot;{{ product.link }}&quot; style=&quot;display: block; text-transform: uppercase; font-weight: 700; text-decoration: none; font-size: 0.875rem; line-height: 1.4; color: black; margin-top: 10px;&quot;&gt;{{ product.name }}&lt;/a&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;price-container-promo&quot; style=&quot;display: flex; align-items: center; margin-top: 5px;&quot;&gt;
+            &lt;span style=&quot;color: #E30815 !important; font-weight: 700; font-size: 130%;&quot;&gt;{{ product.your_price }}&lt;/span&gt;
+            &lt;span style=&quot;text-decoration: line-through; color: #888; font-size: 75%; font-weight: 400; margin-left: 10px;&quot;&gt;{{ product.catalog_price }}&lt;/span&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;button-container-promo&quot; style=&quot;display: flex; justify-content: flex-start; margin-top: 15px;&quot;&gt;
+            &lt;a href=&quot;https://epstryk.pl/pl/order/basket.html?add_product[{{ product.id }}]=1&quot; class=&quot;btn btn--primary newsList__button&quot;&gt;KUP TERAZ&lt;/a&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+    {% endfor %}
+
+    {% for _ in range(4 - (product_data|length % 4)) %}
+    &lt;div class=&quot;product-container-promo&quot; style=&quot;flex: 1 1 calc(25% - 20px); border: none; padding: 15px; min-width: 250px; box-sizing: border-box; visibility: hidden;&quot;&gt;&lt;/div&gt;
+    {% endfor %}
+    
+    &lt;/div&gt;
+    </textarea>
+    <button onclick="copyHTML()" style="padding: 10px 20px; margin-top: 10px; background-color: #007bff; color: white; border: none; cursor: pointer; border-radius: 5px;">Kopiuj HTML</button>
+</div>
+{% endif %}
+
+<script>
+    function copyHTML() {
+        const htmlOutput = document.getElementById("htmlOutput");
+        htmlOutput.select();
+        document.execCommand("copy");
+        alert("HTML skopiowany do schowka!");
+    }
+</script>
+
+</body>
+</html>
