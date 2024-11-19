@@ -9,17 +9,11 @@ import re
 app = Flask(__name__)
 
 def start_webdriver():
-    # Konfiguracja przeglądarki Chrome
-    options = webdriver.ChromeOptions()
-    options.add_argument("--headless")  # Tryb bez interfejsu graficznego
+    options = Options()
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-dev-shm-usage")
-    options.add_argument("--disable-gpu")
-    options.add_argument("--disable-software-rasterizer")
-    options.binary_location = "/usr/bin/google-chrome-stable"  # Ścieżka do Chrome na Render
-
-    # Użycie webdriver-manager do pobrania sterownika
-    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+    options.binary_location = "/usr/bin/google-chrome"  # Ścieżka do Chrome w Render
+    driver = webdriver.Chrome(options=options)
     return driver
 
 def search_product(driver, product_code):
