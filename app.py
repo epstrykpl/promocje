@@ -10,13 +10,9 @@ app = Flask(__name__)
 
 def start_webdriver():
     options = Options()
+    options.add_argument("--headless")  # Uruchom w trybie headless
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-dev-shm-usage")
-    options.add_argument("--headless")  # Dodanie trybu headless
-    options.add_argument("--disable-gpu")
-    options.add_argument("--window-size=1920x1080")  # Opcjonalne ustawienie rozmiaru okna
-    options.add_argument("--disable-extensions")
-    options.add_argument("--start-maximized")
     driver = webdriver.Chrome(options=options)
     return driver
 
@@ -32,7 +28,21 @@ def close_cookie_popup(driver):
 def login_to_epstryk(driver):
     driver.get("https://epstryk.pl/pl/order/login.html")
     close_cookie_popup(driver)
-    input(">>> Zaloguj się ręcznie w otwartym oknie przeglądarki, a następnie naciśnij Enter tutaj, aby kontynuować...")
+
+    try:
+        # Automatyczne logowanie
+        username_field = driver.find_element(By.ID, "login_username")  # Uzupełnij poprawnym ID
+        password_field = driver.find_element(By.ID, "login_password")  # Uzupełnij poprawnym ID
+        login_button = driver.find_element(By.XPATH, "//button[contains(text(), 'Zaloguj')]")  # Uzupełnij poprawnym selektorem
+
+        username_field.send_keys("twoja_nazwa_użytkownika")  # Wpisz login
+        password_field.send_keys("twoje_hasło")  # Wpisz hasło
+        login_button.click()
+
+        time.sleep(3)  # Poczekaj na załadowanie strony po logowaniu
+        print("Logowanie zakończone.")
+    except Exception as e:
+        print(f"Błąd podczas logowania: {e}")
 
 def search_product(driver, product_code):
     search_url = f"https://epstryk.pl/pl/szukaj/?search_lang=pl&search=product&string={product_code}"
@@ -57,14 +67,14 @@ def extract_product_data(driver, product_link):
         your_price = driver.find_element(By.CSS_SELECTOR, ".productParam__value.-bold.productParam__value--big").text
         image_url = driver.find_element(By.CSS_SELECTOR, ".productFoto__zoom img").get_attribute("src")
         
-        # Pobieranie identyfikatora produktu z Facebook Pixel
+        # Pobieranie identyfikatora produktu z kodu strony
         page_source = driver.page_source
-        match = re.search(r'cd\[content_ids\]\[\]=(\d+)', page_source)
+        match = re.search(r"fbq\('track', 'ViewContent', {content_type:'product', content_ids:\['(\d+)'\]", page_source)
         if match:
             product_id = match.group(1)
-            print(f"Identyfikator produktu znaleziony w Facebook Pixel: {product_id}")
+            print(f"Identyfikator produktu znaleziony w JavaScript: {product_id}")
         else:
-            print("Nie udało się znaleźć identyfikatora produktu w Facebook Pixel.")
+            print("Nie udało się znaleźć identyfikatora produktu.")
             return None
 
         return {
