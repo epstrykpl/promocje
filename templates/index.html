@@ -1,23 +1,49 @@
 <!DOCTYPE html>
-<html lang="pl">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Promocje Generator</title>
+    <title>Generator HTML</title>
 </head>
 <body>
-    <h1>Generator HTML dla produktów</h1>
+    <h1>Wprowadź kody produktów</h1>
     <form method="POST">
-        {% for i in range(1, 11) %}
-        <input type="text" name="product_code{{ i }}" placeholder="Kod produktu {{ i }}">
-        <br>
-        {% endfor %}
+        <label for="product_code1">Kod produktu 1:</label>
+        <input type="text" id="product_code1" name="product_code1"><br><br>
+
+        <label for="product_code2">Kod produktu 2:</label>
+        <input type="text" id="product_code2" name="product_code2"><br><br>
+
+        <label for="product_code3">Kod produktu 3:</label>
+        <input type="text" id="product_code3" name="product_code3"><br><br>
+
+        <label for="product_code4">Kod produktu 4:</label>
+        <input type="text" id="product_code4" name="product_code4"><br><br>
+
+        <label for="product_code5">Kod produktu 5:</label>
+        <input type="text" id="product_code5" name="product_code5"><br><br>
+
+        <label for="product_code6">Kod produktu 6:</label>
+        <input type="text" id="product_code6" name="product_code6"><br><br>
+
+        <label for="product_code7">Kod produktu 7:</label>
+        <input type="text" id="product_code7" name="product_code7"><br><br>
+
+        <label for="product_code8">Kod produktu 8:</label>
+        <input type="text" id="product_code8" name="product_code8"><br><br>
+
+        <label for="product_code9">Kod produktu 9:</label>
+        <input type="text" id="product_code9" name="product_code9"><br><br>
+
+        <label for="product_code10">Kod produktu 10:</label>
+        <input type="text" id="product_code10" name="product_code10"><br><br>
+
         <button type="submit">Generuj HTML</button>
     </form>
 
-    {% if product_data %}
+    {% if html_code %}
+    <h2>Wyniki</h2>
     <div>
-        <h2>Wyniki:</h2>
         {{ html_code|safe }}
     </div>
     {% endif %}
