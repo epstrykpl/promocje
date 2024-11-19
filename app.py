@@ -12,6 +12,11 @@ def start_webdriver():
     options = Options()
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-dev-shm-usage")
+    options.add_argument("--headless")  # Dodanie trybu headless
+    options.add_argument("--disable-gpu")
+    options.add_argument("--window-size=1920x1080")  # Opcjonalne ustawienie rozmiaru okna
+    options.add_argument("--disable-extensions")
+    options.add_argument("--start-maximized")
     driver = webdriver.Chrome(options=options)
     return driver
 
