@@ -31,8 +31,8 @@ def login_to_epstryk(driver):
 
     try:
         # Automatyczne logowanie
-        username_field = driver.find_element(By.ID, "login_username")  # Uzupełnij poprawnym ID
-        password_field = driver.find_element(By.ID, "login_password")  # Uzupełnij poprawnym ID
+        username_field = driver.find_element(By.ID, "gplachta22@gmail.com")  # Uzupełnij poprawnym ID
+        password_field = driver.find_element(By.ID, "p@ssw0rd#")  # Uzupełnij poprawnym ID
         login_button = driver.find_element(By.XPATH, "//button[contains(text(), 'Zaloguj')]")  # Uzupełnij poprawnym selektorem
 
         username_field.send_keys("twoja_nazwa_użytkownika")  # Wpisz login
