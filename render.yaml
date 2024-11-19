@@ -2,13 +2,13 @@ services:
   - type: web
     name: promocje
     env: python
-    runtime: python3
     buildCommand: pip install -r requirements.txt
     startCommand: python app.py
-    plan: free
-    build:
-      - apt-get update
-      - apt-get install -y wget unzip
-      - wget -q -O /tmp/chrome.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-      - apt-get install -y /tmp/chrome.deb
-      - rm /tmp/chrome.deb
+    runtime: python3
+    envVars:
+      PYTHONUNBUFFERED: "1"
+    preDeploy:
+      - apt-get update && apt-get install -y wget gnupg
+      - wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+      - apt-get install -y ./google-chrome-stable_current_amd64.deb
+      - rm google-chrome-stable_current_amd64.deb
