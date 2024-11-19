@@ -8,12 +8,10 @@ import re
 app = Flask(__name__)
 
 def start_webdriver():
-    """Initialize Selenium WebDriver with appropriate options for Render."""
     options = Options()
-    options.add_argument("--headless")  # Run in headless mode for Render
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-dev-shm-usage")
-    options.binary_location = "/usr/bin/google-chrome"  # Path to Chrome in Render
+    options.binary_location = "/usr/bin/google-chrome"  # Ścieżka do Chrome w Render
     driver = webdriver.Chrome(options=options)
     return driver
 
