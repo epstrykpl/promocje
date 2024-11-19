@@ -1,48 +1,24 @@
 from flask import Flask, render_template, request
 from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.chrome.service import Service
+from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.by import By
 import time
-import os
 import re
 
 app = Flask(__name__)
 
 def start_webdriver():
-    options = Options()
+    options = webdriver.ChromeOptions()
     options.add_argument("--headless")  # Uruchom w trybie headless
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-dev-shm-usage")
-    driver = webdriver.Chrome(options=options)
+    options.add_argument("--disable-gpu")
+    options.add_argument("--disable-software-rasterizer")
+
+    # Użyj webdriver-manager do zarządzania sterownikiem Chrome
+    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
     return driver
-
-def close_cookie_popup(driver):
-    try:
-        cookie_button = driver.find_element(By.XPATH, "//a[contains(text(), 'Zezwól na wszystkie')]")
-        cookie_button.click()
-        time.sleep(2)
-        print("Komunikat o ciasteczkach został zamknięty.")
-    except Exception as e:
-        print(f"Komunikat o ciasteczkach nie został znaleziony lub wystąpił błąd: {e}")
-
-def login_to_epstryk(driver):
-    driver.get("https://epstryk.pl/pl/order/login.html")
-    close_cookie_popup(driver)
-
-    try:
-        # Automatyczne logowanie
-        username_field = driver.find_element(By.ID, "gplachta22@gmail.com")  # Uzupełnij poprawnym ID
-        password_field = driver.find_element(By.ID, "p@ssw0rd#")  # Uzupełnij poprawnym ID
-        login_button = driver.find_element(By.XPATH, "//button[contains(text(), 'Zaloguj')]")  # Uzupełnij poprawnym selektorem
-
-        username_field.send_keys("twoja_nazwa_użytkownika")  # Wpisz login
-        password_field.send_keys("twoje_hasło")  # Wpisz hasło
-        login_button.click()
-
-        time.sleep(3)  # Poczekaj na załadowanie strony po logowaniu
-        print("Logowanie zakończone.")
-    except Exception as e:
-        print(f"Błąd podczas logowania: {e}")
 
 def search_product(driver, product_code):
     search_url = f"https://epstryk.pl/pl/szukaj/?search_lang=pl&search=product&string={product_code}"
@@ -97,8 +73,6 @@ def index():
         driver = start_webdriver()
 
         try:
-            login_to_epstryk(driver)
-
             product_data_list = []
             for code in product_codes:
                 if code:
